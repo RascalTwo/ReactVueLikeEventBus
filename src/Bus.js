@@ -13,6 +13,10 @@ export class Bus{
 		console.log(this.name, event, args);
 		if (this.handlers[event]) this.handlers[event](...args);
 	}
+
+	destroy(){
+		for (const event in this.handlers) delete this.handlers[event];
+	}
 }
 
 export const GLOBAL_BUS = new Bus('GlobalBus');

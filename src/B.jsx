@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Bus, GLOBAL_BUS } from './Bus.js'
+import React, { useState, useEffect, useMemo } from 'react';
 
-export default function B({ bus }){
-	const [ponged, setPonged] = useState(new Date());
+import { GLOBAL_BUS } from './Bus.js'
 
-	useEffect(() => {
-		return (bus || GLOBAL_BUS).listen('ping', setPonged)
-	}, [bus]);
+
+const useBusMessage = (bus, initialValue) => {
+	const [message, setMessage] = useState(initialValue);
+
+	useEffect(() =>
+		(bus || GLOBAL_BUS).listen('ping', setMessage)
+		, [bus]
+	);
+
+	return message;
+}
+
+export default function B({ bus }) {
+	const message = useBusMessage(
+		useMemo(() => bus || GLOBAL_BUS, [bus]),
+		useMemo(() => new Date(), [])
+	);
 
 	return (
-		<p>Content: {ponged.toString()}</p>
+		<p>Content: {message.toString()}</p>
 	)
 }

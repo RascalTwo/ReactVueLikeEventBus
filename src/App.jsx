@@ -5,28 +5,39 @@ import { Bus } from './Bus';
 import A from './A'
 import B from './B'
 
+const useBus = (name) => {
+	const [bus, setBus] = useState();
+
+	useEffect(() =>
+		setBus(new Bus(name))
+		, [name]
+	);
+
+	useEffect(() =>
+		bus ? () => bus.destroy() : undefined
+		, [bus]
+	);
+
+	return bus;
+}
 
 function App() {
-	const [bus, setBus] = useState();
-	
-	useEffect(() => {
-		setBus(new Bus('AppBus'));
-	}, []);
+	const bus = useBus('AppBus');
 
-  return (
-    <main>
+	return (
+		<main>
 			<h1>GlobalBus</h1>
-			<A/>
-			<B/>
+			<A />
+			<B />
 			<h1>AppBus</h1>
 			{bus
 				? <>
-						<A bus={bus}/>
-						<B bus={bus}/>
-					</>
+					<A bus={bus} />
+					<B bus={bus} />
+				</>
 				: null}
-    </main>
-  );
+		</main>
+	);
 }
 
 export default App;
